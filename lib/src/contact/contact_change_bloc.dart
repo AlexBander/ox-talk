@@ -81,6 +81,10 @@ class ContactChangeBloc extends Bloc<ContactChangeEvent, ContactChangeState> {
       _blockContact(event.id);
     } else if (event is ContactBlocked) {
       yield ContactChangeStateSuccess(add: false, delete: false, blocked: true, id: null);
+    } else if (event is UnblockContact) {
+      _unblockContact(event.id);
+    } else if (event is ContactUnblocked) {
+      yield ContactChangeStateSuccess(add: false, delete: false, blocked: false, id: null);
     }
   }
 
@@ -114,5 +118,11 @@ class ContactChangeBloc extends Bloc<ContactChangeEvent, ContactChangeState> {
     Repository<ChatMsg> messagesRepository = RepositoryManager.get(RepositoryType.chatMessage, ChatMessageRepository.inviteChatId);
     messagesRepository.clear();
     dispatch(ContactBlocked());
+  }
+
+  void _unblockContact(int id) async {
+    Context context = Context();
+    await context.unblockContact(id);
+    dispatch(ContactUnblocked());
   }
 }

@@ -129,7 +129,7 @@ class _CreateChatState extends State<CreateChat> {
             itemBuilder: (BuildContext context, int index) {
               var contactId = contactIds[index];
               var key = "$contactId-${contactLastUpdateValues[index]}";
-              return ContactItem(contactId, true, key);
+              return ContactItem(contactId, true, false, key);
             }
           ),
         )

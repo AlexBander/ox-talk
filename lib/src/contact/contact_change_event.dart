@@ -77,3 +77,11 @@ class BlockContact extends ContactChangeEvent {
 }
 
 class ContactBlocked extends ContactChangeEvent {}
+
+class UnblockContact extends ContactChangeEvent {
+  final int id;
+
+  UnblockContact(this.id);
+}
+
+class ContactUnblocked extends ContactChangeEvent {}

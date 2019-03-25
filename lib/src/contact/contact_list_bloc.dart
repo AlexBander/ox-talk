@@ -55,6 +55,7 @@ class ContactListBloc extends Bloc<ContactListEvent, ContactListState> {
   final Repository<Contact> contactRepository = RepositoryManager.get(RepositoryType.contact);
   RepositoryStreamHandler repositoryStreamHandler;
   List<int> validContactIds = List();
+  List<int> blockedContactIds = List();
 
   @override
   ContactListState get initialState => ContactListStateInitial();
@@ -78,6 +79,22 @@ class ContactListBloc extends Bloc<ContactListEvent, ContactListState> {
         resultValidContactLastUpdateValues.add(contact.lastUpdate);
       }
       yield ContactListStateSuccess(contactIds: resultValidContactIds, contactLastUpdateValues: resultValidContactLastUpdateValues);
+    } else if (event is RequestBlockedContacts) {
+      yield ContactListStateLoading();
+      try {
+        setupBlockedContacts();
+      } catch (error) {
+        yield ContactListStateFailure(error: error.toString());
+      }
+    } else if (event is BlockedContactsChanged) {
+      List<int> resultBlockedContactIds = List();
+      List<int> resultBlockedContactLastUpdateValues = List();
+      for (int index = 0; index < blockedContactIds.length; index++) {
+        var contact = contactRepository.get(blockedContactIds[index]);
+        resultBlockedContactIds.add(contact.getId());
+        resultBlockedContactLastUpdateValues.add(contact.lastUpdate);
+      }
+      yield ContactListStateSuccess(contactIds: resultBlockedContactIds, contactLastUpdateValues: resultBlockedContactLastUpdateValues);
     }
   }
 
@@ -106,5 +123,11 @@ class ContactListBloc extends Bloc<ContactListEvent, ContactListState> {
     await _updateValidContactIds();
     contactRepository.putIfAbsent(ids: validContactIds);
     dispatch(ContactsChanged());
+  }
+
+  void setupBlockedContacts() async {
+    Context context = Context();
+    blockedContactIds = List.from(await context.getBlockedContacts());
+    dispatch(BlockedContactsChanged());
   }
 }
