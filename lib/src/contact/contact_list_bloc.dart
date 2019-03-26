@@ -56,6 +56,7 @@ class ContactListBloc extends Bloc<ContactListEvent, ContactListState> {
   RepositoryStreamHandler repositoryStreamHandler;
   List<int> validContactIds = List();
   List<int> blockedContactIds = List();
+  List<int> chatContactIds = List();
 
   @override
   ContactListState get initialState => ContactListStateInitial();
@@ -95,6 +96,13 @@ class ContactListBloc extends Bloc<ContactListEvent, ContactListState> {
         resultBlockedContactLastUpdateValues.add(contact.lastUpdate);
       }
       yield ContactListStateSuccess(contactIds: resultBlockedContactIds, contactLastUpdateValues: resultBlockedContactLastUpdateValues);
+    } else if(event is RequestChatContacts){
+      yield ContactListStateLoading();
+      try {
+        setupChatContacts(event.chatId);
+      } catch (error) {
+        yield ContactListStateFailure(error: error.toString());
+      }
     }
   }
 
@@ -129,5 +137,11 @@ class ContactListBloc extends Bloc<ContactListEvent, ContactListState> {
     Context context = Context();
     blockedContactIds = List.from(await context.getBlockedContacts());
     dispatch(BlockedContactsChanged());
+  }
+
+  void setupChatContacts(int chatId) async {
+    Context context = Context();
+    validContactIds = List.from(await context.getChatContacts(chatId));
+    dispatch(ContactsChanged());
   }
 }

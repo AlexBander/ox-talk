@@ -277,6 +277,9 @@ class AppLocalizations {
 
   String get chatListEmpty => Intl.message('No chats', name: 'chatListEmpty');
 
+  //Chat profile view
+  String get chatProfileBlockContactButtonText => Intl.message('Block contact', name: 'chatProfileBlockContactButtonText');
+
   // Create chat
   String get createChatTitle => Intl.message('Create chat', name: 'createChatTitle');
 
