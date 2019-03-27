@@ -85,7 +85,11 @@ class ContactBlockedList extends StatefulWidget {
        bloc: _contactListBloc,
        builder: (context, state) {
          if (state is ContactListStateSuccess) {
-           return buildListViewItems(state.contactIds, state.contactLastUpdateValues);
+           if(state.contactIds.length > 0) {
+             return buildListViewItems(state.contactIds, state.contactLastUpdateValues);
+           } else{
+             return Center(child: Text(AppLocalizations.of(context).blockedListEmpty),);
+           }
          } else if (state is! ContactListStateFailure) {
            return Center(
              child: CircularProgressIndicator(),

@@ -341,6 +341,8 @@ class AppLocalizations {
 
   String unblockDialogText(name) => Intl.message('Do you want to unblock $name?', name: 'unblockDialogText', args: [name]);
 
+  String get blockedListEmpty => Intl.message('No blocked contacts', name: 'blockedListEmpty');
+
   // Profile
   String get profileTitle => Intl.message('Profile', name: 'profileTitle');
 

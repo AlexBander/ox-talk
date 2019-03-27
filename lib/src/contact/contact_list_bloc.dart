@@ -118,8 +118,10 @@ class ContactListBloc extends Bloc<ContactListEvent, ContactListState> {
   }
 
   void _dispatchContactsChanged() async {
-    await _updateValidContactIds();
-    dispatch(ContactsChanged());
+//    await _updateValidContactIds();
+    await _updateValidBlockedContactIds();
+//    dispatch(ContactsChanged());
+    dispatch(BlockedContactsChanged());
   }
 
   Future _updateValidContactIds() async {
@@ -133,9 +135,13 @@ class ContactListBloc extends Bloc<ContactListEvent, ContactListState> {
     dispatch(ContactsChanged());
   }
 
-  void setupBlockedContacts() async {
+  Future _updateValidBlockedContactIds() async {
     Context context = Context();
     blockedContactIds = List.from(await context.getBlockedContacts());
+  }
+
+  void setupBlockedContacts() async {
+    await _updateValidBlockedContactIds();
     dispatch(BlockedContactsChanged());
   }
 

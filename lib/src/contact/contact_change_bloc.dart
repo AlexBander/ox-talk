@@ -121,7 +121,6 @@ class ContactChangeBloc extends Bloc<ContactChangeEvent, ContactChangeState> {
   }
 
   void _unblockContact(int id) async {
-    contactRepository.remove(id);
     Context context = Context();
     await context.unblockContact(id);
     dispatch(ContactUnblocked());
